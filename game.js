@@ -8,6 +8,13 @@ function initializeGame() {
     // Initialize the game board to be an array of five arrays.
     // Each of the inner arrays should contain five empty strings.
     // Use the variable dimensions instead of hard coding the number five.
+    for (let i = 0; i < dimensions; i++) {
+        let row = [];
+        for (let j = 0; j < dimensions; j++) {
+            row.push('');
+        }
+        board.push(row);
+    }
 }
 
 function nextTurn() {
