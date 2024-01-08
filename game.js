@@ -59,20 +59,20 @@ function handleClick(event) {
     // TODO: Task 2 A
     // Implement the conditions when the board should be expanded.
     // Ie when the player clicks the extreme rows or columns.
-    /* 
-    if ( ) {
+    
+    if (x == 0 ) {
         expandBoard('LEFT');
     }
-    else if ( ) {
+    else if ( x == dimX - 1) {
         expandBoard('RIGHT');
     }
-    if ( ) {
+    if (y == 0) {
         expandBoard('UP');
     }
-    else if ( ) {
+    else if (y == dimY -1) {
         expandBoard('DOWN');
     }
-    */
+   
 
     nextTurn();
 }
