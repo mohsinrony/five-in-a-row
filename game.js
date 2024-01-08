@@ -41,7 +41,12 @@ function expandBoard(direction) {
     // TODO: Task 2 B
     // This function adds a column or a row to the board
     // depending on the direction it gets as an argument.
-
+    if (direction === 'LEFT' || direction === 'RIGHT') {
+        dimensions++;
+    } else if (direction === 'UP' || direction === 'DOWN') {
+        dimensions++;
+    }
+    initializeGame();
     drawBoard();
 }
 
