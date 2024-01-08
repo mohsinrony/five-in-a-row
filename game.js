@@ -35,6 +35,48 @@ function checkWin(x, y) {
     // If any of them contain same character as the current turn,
     // keep on checking to that direction -- and to the opposite!
     // Number of the stones needed is in variable winLength.
+    const directions = [
+       {dx: 1, dy: 0},
+       {dx: 0, dy: 1},
+       {dx: 1, dy: 1},
+       {dx: 1, dy: -1} 
+    ];
+    for (const dir of directions) {
+        let count = 1;
+        for (let i = 1; i < winLength; i++){
+            let newX = x + i * dir.dx;
+            let newY = y + i * dir.dy;
+            if (
+                newX >= 0 &&
+                newX < dimX &&
+                newY >= 0 &&
+                newY < dimY &&
+                board[newY][newX] === turn
+            ){
+                count++;
+            } else {
+                break;
+            }
+        }
+        for (let i =1; i < winLength; i++){
+            let newX = x - i * dir.dx;
+            let newY = y - i * dir.dy;
+            if (
+                newX >= 0 &&
+                newX < dimX &&
+                newY >= 0 &&
+                newY < dimY &&
+                board[newY][newX] === turn
+            ){
+                count++;
+            } else {
+                break;
+            }
+        }
+        if (count >= winLength){
+            alert(`${turn} wins!`)
+        }
+    }
 }
 
 function expandBoard(direction) {
