@@ -1,153 +1,171 @@
 const dimensions = 5; // The initial board size is dimensions x dimensions
 const winLength = 5; // How many stones needed to win
+let dimX = dimensions;
+let dimY = dimensions;
 const board = []; // The game board
-let turn = 'X'; // Starting player. The other player is 'O'.
+let turn = "X"; // Starting player. The other player is 'O'.
 
 function initializeGame() {
-    // TODO: Task 1
-    // Initialize the game board to be an array of five arrays.
-    // Each of the inner arrays should contain five empty strings.
-    // Use the variable dimensions instead of hard coding the number five.
-    for (let i = 0; i < dimensions; i++) {
-        let row = [];
-        for (let j = 0; j < dimensions; j++) {
-            row.push('');
-        }
-        board.push(row);
+  for (let y = 0; y < dimY; y++) {
+    const row = [];
+    for (let x = 0; x < dimX; x++) {
+      row.push("");
     }
+    board.push(row);
+  }
 }
 
 function nextTurn() {
-    if (turn === 'X') {
-        turn = 'O';
-    }
-    else {
-        turn = 'X';
-    }
-    let turnLabel = document.getElementById('turn');
-    turnLabel.textContent = turn;
+  if (turn === "X") {
+    turn = "O";
+  } else {
+    turn = "X";
+  }
+  let turnLabel = document.getElementById("turn");
+  turnLabel.textContent = turn;
 }
 
 function checkWin(x, y) {
-    // TODO: Task 3
-    // Hint: be careful to keep yourself inside of the game board!
-    // Check the neighbouring squares of the square x,y.
-    // If any of them contain same character as the current turn,
-    // keep on checking to that direction -- and to the opposite!
-    // Number of the stones needed is in variable winLength.
-    const directions = [
-       {dx: 1, dy: 0},
-       {dx: 0, dy: 1},
-       {dx: 1, dy: 1},
-       {dx: 1, dy: -1} 
-    ];
-    for (const dir of directions) {
-        let count = 1;
-        for (let i = 1; i < winLength; i++){
-            let newX = x + i * dir.dx;
-            let newY = y + i * dir.dy;
-            if (
-                newX >= 0 &&
-                newX < dimX &&
-                newY >= 0 &&
-                newY < dimY &&
-                board[newY][newX] === turn
-            ){
-                count++;
-            } else {
-                break;
-            }
+  const currentPlayer = board[y][x];
+
+  // Define the directions to check: horizontal, vertical, and diagonal
+  const directions = [
+    [0, 1], // Right
+    [1, 0], // Down
+    [1, 1], // Diagonal down-right
+    [-1, 1], // Diagonal down-left
+  ];
+
+  for (const [dx, dy] of directions) {
+    let count = 1;
+
+    // Check in one direction
+    for (let i = 1; i < winLength; i++) {
+      const newX = x + i * dx;
+      const newY = y + i * dy;
+
+      if (newX >= 0 && newX < dimX && newY >= 0 && newY < dimY) {
+        if (board[newY][newX] === currentPlayer) {
+          count++;
+        } else {
+          break;
         }
-        for (let i =1; i < winLength; i++){
-            let newX = x - i * dir.dx;
-            let newY = y - i * dir.dy;
-            if (
-                newX >= 0 &&
-                newX < dimX &&
-                newY >= 0 &&
-                newY < dimY &&
-                board[newY][newX] === turn
-            ){
-                count++;
-            } else {
-                break;
-            }
-        }
-        if (count >= winLength){
-            alert(`${turn} wins!`)
-        }
+      } else {
+        break;
+      }
     }
+
+    // Check in the opposite direction
+    for (let i = 1; i < winLength; i++) {
+      const newX = x - i * dx;
+      const newY = y - i * dy;
+
+      if (newX >= 0 && newX < dimX && newY >= 0 && newY < dimY) {
+        if (board[newY][newX] === currentPlayer) {
+          count++;
+        } else {
+          break;
+        }
+      } else {
+        break;
+      }
+    }
+
+    if (count >= winLength) {
+      document.getElementById("winner").textContent = `${currentPlayer} wins!`;
+      return true;
+    }
+  }
+
+  return false;
 }
 
 function expandBoard(direction) {
-    // TODO: Task 2 B
-    // This function adds a column or a row to the board
-    // depending on the direction it gets as an argument.
-    if (direction === 'LEFT' || direction === 'RIGHT') {
-        dimensions++;
-    } else if (direction === 'UP' || direction === 'DOWN') {
-        dimensions++;
+  if (direction === "LEFT") {
+    for (let i = 0; i < board.length; i++) {
+      board[i].unshift("");
     }
-    initializeGame();
-    drawBoard();
+    dimX++;
+  } else if (direction === "RIGHT") {
+    for (let i = 0; i < board.length; i++) {
+      board[i].push("");
+    }
+    dimX++;
+  } else if (direction === "UP") {
+    board.unshift([]);
+    for (let i = 0; i < dimX; i++) {
+      board[0].push("");
+    }
+    dimY++;
+  } else if (direction === "DOWN") {
+    board.push([]);
+    for (let i = 0; i < dimX; i++) {
+      board[board.length - 1].push("");
+    }
+    dimY++;
+  }
+
+  drawBoard();
 }
 
 function handleClick(event) {
-    let square = event.target;
-    let x = square.dataset.x;
-    let y = square.dataset.y;
+  let square = event.target;
+  let x = square.dataset.x;
+  let y = square.dataset.y;
 
-    board[y][x] = turn;
-    square.textContent = turn;
-    square.removeEventListener('click', handleClick);
+  if (board[y][x] !== "") return; // Prevent overwriting an already filled square.
 
-    checkWin(x, y);
+  board[y][x] = turn;
+  square.textContent = turn;
+  square.removeEventListener("click", handleClick);
 
-    // TODO: Task 2 A
-    // Implement the conditions when the board should be expanded.
-    // Ie when the player clicks the extreme rows or columns.
-    
-    if (x == 0 ) {
-        expandBoard('LEFT');
-    }
-    else if ( x == dimX - 1) {
-        expandBoard('RIGHT');
-    }
-    if (y == 0) {
-        expandBoard('UP');
-    }
-    else if (y == dimY -1) {
-        expandBoard('DOWN');
-    }
-   
+  if (checkWin(x, y)) return;
 
-    nextTurn();
+  // Expanding the board if clicked on extreme rows or columns
+  if (x == 0 && board[y][x] !== "") expandBoard("LEFT");
+  if (x == dimX - 1 && board[y][x] !== "") expandBoard("RIGHT");
+  if (y == 0 && board[y][x] !== "") expandBoard("UP");
+  if (y == dimY - 1 && board[y][x] !== "") expandBoard("DOWN");
+
+  nextTurn();
 }
 
 function createSquare(boardDiv, x, y) {
-    let element = document.createElement('div');
-    element.setAttribute('class', 'square');
-    element.setAttribute('data-x', x);
-    element.setAttribute('data-y', y);
-    element.textContent = board[y][x];
+  let element = document.createElement("div");
+  element.setAttribute("class", "square");
+  element.setAttribute("data-x", x);
+  element.setAttribute("data-y", y);
+  element.textContent = board[y][x];
 
-    if (board[y][x] === '') {
-        element.addEventListener('click', handleClick);
-    }
+  if (board[y][x] === "") {
+    element.addEventListener("click", handleClick);
+  }
 
-    boardDiv.appendChild(element);
+  boardDiv.appendChild(element);
 }
 
 function drawBoard() {
-    const boardDiv = document.getElementById('board');
-    boardDiv.innerHTML = ''; // Clear the board first!
+  const boardDiv = document.getElementById("board");
+  boardDiv.innerHTML = ""; // Clear the board first!
 
-    for (let y = 0; y < dimensions; y++) {
-        for (let x = 0; x < dimensions; x++) {
-            createSquare(boardDiv, x, y);
-        }
+  for (let y = 0; y < dimY; y++) {
+    for (let x = 0; x < dimX; x++) {
+      createSquare(boardDiv, x, y);
     }
+  }
 }
+
+function newGame() {
+  dimX = 5;
+  dimY = 5;
+  turn = "X";
+  document.getElementById("turn").textContent = turn;
+  document.getElementById("winner").textContent = "";
+  initializeGame();
+  drawBoard();
+}
+
+document.getElementById("new-game").addEventListener("click", newGame);
 
 initializeGame();
 drawBoard();

@@ -1,29 +1,61 @@
-* {
-    box-sizing: border-box;
-}
-
+/* Set general body styles */
 body {
-    background-color: beige;
-}
-
-.hidden {
-    visibility: hidden;
-}
-
-#board {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f4f4f9;
+    flex-direction: column;
+  }
+  
+  #board {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
-    column-gap: 10px;
-    row-gap: 10px;
-    width: fit-content;
-}
-
-.square {
-    background-color: white;
+    grid-template-columns: repeat(5, 50px);
+    grid-template-rows: repeat(5, 50px);
+    gap: 5px;
+    margin-bottom: 20px;
+  }
+  
+  .square {
     width: 50px;
     height: 50px;
-    padding: 5px;
-    text-align: center;
-    font-size: 32px;
-}
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #e0e0e0;
+    border: 1px solid #ccc;
+    font-size: 24px;
+    cursor: pointer;
+    user-select: none;
+  }
+  
+  .square:hover {
+    background-color: #c5c5c5;
+  }
+  
+  #turn, #winner {
+    font-size: 24px;
+    margin: 10px 0;
+  }
+  
+  button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-top: 20px;
+  }
+  
+  button:hover {
+    background-color: #45a049;
+  }
+  
+  button:active {
+    background-color: #3e8e41;
+  }
+  
